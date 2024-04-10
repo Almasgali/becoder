@@ -38,7 +38,7 @@ public class AccountService {
     public void updateAccount(String id, long amount) {
         Optional<Account> optAccount = accountRepository.findById(id);
         if (optAccount.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
         }
         Account account = optAccount.get();
         if (account.getBalance() + amount < 0) {
