@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.dto.AccountRequest;
+import ru.becoder.krax.dto.AccountResponse;
 import ru.becoder.krax.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Async
 @Slf4j
 public class AccountService {
@@ -35,16 +33,29 @@ public class AccountService {
         log.info("Acconut {} is saved", account.getId());
     }
 
+    @Transactional
     public void updateAccount(String id, long amount) {
-        Optional<Account> optAccount = accountRepository.findById(id);
-        if (optAccount.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
-        }
-        Account account = optAccount.get();
-        if (account.getBalance() + amount < 0) {
+        Account account = accountRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+        long newBalance = account.getBalance() + amount;
+        if (newBalance < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough money");
         }
         account.setBalance(account.getBalance() + amount);
         accountRepository.save(account);
+    }
+
+    public AccountResponse getAccount(String id) {
+        Account account = accountRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+
+        return AccountResponse
+                .builder()
+                .id(account.getId())
+                .name(account.getName())
+                .balance(account.getBalance())
+                .build();
     }
 }
