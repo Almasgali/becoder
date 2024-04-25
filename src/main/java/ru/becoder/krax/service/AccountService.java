@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.dto.AccountRequest;
-import ru.becoder.krax.dto.AccountResponse;
 import ru.becoder.krax.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 

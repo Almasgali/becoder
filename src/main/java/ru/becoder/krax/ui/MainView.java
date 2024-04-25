@@ -26,23 +26,23 @@ public class MainView extends VerticalLayout {
         this.grid = new Grid<>(Account.class);
         this.addNewBtn = new Button("New customer", VaadinIcon.PLUS.create());
 
-        HorizontalLayout actions = new HorizontalLayout(addNewBtn);
-        add(actions, grid, editor);
+        HorizontalLayout actions = new HorizontalLayout(this.addNewBtn);
+        add(actions, this.grid, editor);
 
-        grid.setHeight("300px");
-        grid.setColumns("id", "name", "balance");
-        grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);
+        this.grid.setHeight("300px");
+        this.grid.setColumns("id", "name", "balance");
+        this.grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);
 
 
 
-        grid.asSingleSelect().addValueChangeListener(e -> {
-            editor.editAccount(e.getValue());
+        this.grid.asSingleSelect().addValueChangeListener(e -> {
+            this.editor.editAccount(e.getValue());
         });
 
-        addNewBtn.addClickListener(e -> editor.editAccount(Account.builder().id(-1).name("").build()));
+        this.addNewBtn.addClickListener(e -> this.editor.editAccount(Account.builder().id(-1).name("").build()));
 
         editor.setChangeHandler(() -> {
-            editor.setVisible(false);
+            this.editor.setVisible(false);
             listCustomers();
         });
 

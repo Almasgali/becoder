@@ -25,7 +25,6 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
     TextField name = new TextField("Name");
     TextField balance = new TextField("Balance");
     Button save = new Button("Save", VaadinIcon.CHECK.create());
-//    Button cancel = new Button("Cancel");
     Button delete = new Button("Delete", VaadinIcon.TRASH.create());
     HorizontalLayout actions = new HorizontalLayout(save, delete);
     Binder<Account> binder = new Binder<>(Account.class);
@@ -50,7 +49,6 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
 
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
-//        cancel.addClickListener(e -> setVisible(false));
         setVisible(false);
     }
 
@@ -83,7 +81,6 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
         } else {
             this.account = account;
         }
-//        cancel.setVisible(persisted);
         balance.setVisible(persisted);
         binder.setBean(this.account);
         setVisible(true);
