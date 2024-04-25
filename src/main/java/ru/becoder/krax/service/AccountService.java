@@ -1,10 +1,10 @@
 package ru.becoder.krax.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.dto.AccountRequest;
 import ru.becoder.krax.dto.AccountResponse;
