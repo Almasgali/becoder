@@ -5,26 +5,27 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.becoder.krax.utils.JwtUtils;
 
 import java.io.IOException;
 
+@Component
+@RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final String HEADER = "Authorization";
     private static final String PREFIX = "Bearer ";
-    @Autowired
-    private JwtUtils jwtUtils;
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -39,7 +40,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
         String jwt = authHeader.substring(PREFIX.length());
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
-        if (username == null || username.isBlank() || SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username == null || username.isBlank() || SecurityContextHolder.getContext().getAuthentication() != null) {
             chain.doFilter(request, response);
             return;
         }

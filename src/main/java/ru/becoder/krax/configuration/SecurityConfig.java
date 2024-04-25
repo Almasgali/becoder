@@ -16,11 +16,8 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import ru.becoder.krax.security.AuthTokenFilter;
 import ru.becoder.krax.security.jwt.AuthEntryPointJwt;
-
-import java.util.List;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -33,27 +30,21 @@ class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final AuthTokenFilter authTokenFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(request -> {
-                    var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfiguration.setAllowedHeaders(List.of("*"));
-                    corsConfiguration.setAllowCredentials(true);
-                    return corsConfiguration;
-                }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/accounts/register", "/accounts/auth").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/accounts/register", "/accounts/auth", "/error").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .exceptionHandling(
                         exceptionConfigurer -> exceptionConfigurer.authenticationEntryPoint(unauthorizedHandler)
                 )
-                .addFilterBefore(new AuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

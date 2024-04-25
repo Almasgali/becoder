@@ -1,6 +1,6 @@
 package ru.becoder.krax.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,10 +8,9 @@ import org.springframework.stereotype.Service;
 import ru.becoder.krax.repository.AccountRepository;
 
 @Service
+@RequiredArgsConstructor
 public class AccountDetailsService implements UserDetailsService {
-
-    @Autowired
-    private AccountRepository userRepository;
+    private final AccountRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String name) {
