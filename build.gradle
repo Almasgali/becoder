@@ -17,6 +17,12 @@ repositories {
 	maven { url = "https://maven.vaadin.com/vaadin-addons" }
 }
 
+configurations {
+	configureEach {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
+}
+
 dependencies {
 
 	compileOnly 'org.projectlombok:lombok:1.18.32'
@@ -32,6 +38,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.liquibase:liquibase-core:4.27.0'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
