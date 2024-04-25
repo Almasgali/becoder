@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +46,7 @@ public class Account implements UserDetails {
     @Column(nullable = false)
     Role role;
 
+    @Min(0)
     long balance;
 
     @JsonIgnore

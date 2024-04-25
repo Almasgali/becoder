@@ -10,8 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.data.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,7 +30,7 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public Account getAccount(Long id) {
+    public Account getAccount(long id) {
         return accountRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
