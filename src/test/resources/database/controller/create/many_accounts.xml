@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dataset>
+    <account id="1" name="one" balance="0"/>
+    <account id="2" name="two" balance="0"/>
+    <account id="3" name="three" balance="0"/>
+</dataset>

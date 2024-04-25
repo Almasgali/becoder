@@ -1,7 +1,6 @@
 package ru.becoder.krax.service;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class AccountService {
     }
 
     @Transactional
-    public void updateAccount(long id, @Min(0) long amount) {
+    public void updateAccount(long id, long amount) {
         Account account = accountRepository
                 .findForUpdateById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
