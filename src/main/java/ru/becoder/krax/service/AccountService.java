@@ -3,29 +3,21 @@ package ru.becoder.krax.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
-import ru.becoder.krax.dto.AccountResponse;
-import ru.becoder.krax.model.Account;
+import ru.becoder.krax.data.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
-
-import static ru.becoder.krax.security.jwt.JwtUtils.getToken;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class AccountService {
+    @Autowired
     private final AccountRepository accountRepository;
-
-    public Account createAccount(String username) {
-        if (accountRepository.findAccountByName(username).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists: " + username);
-        }
-        String token = getToken(username);
-        Account account = Account.builder().name(username).token(token).build();
-        return accountRepository.save(account);
-    }
 
     @Transactional
     public void updateAccount(Long id, long amount) {
