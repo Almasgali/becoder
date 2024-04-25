@@ -62,7 +62,6 @@ class AccountServiceTest {
         accountService.createAccount(
                 AccountRequest.builder()
                         .name("test")
-                        .balance(0)
                         .build()
         );
     }
@@ -79,7 +78,6 @@ class AccountServiceTest {
         accountService.createAccount(
                 AccountRequest.builder()
                         .name("test")
-                        .balance(0)
                         .build()
         );
     }
@@ -94,7 +92,6 @@ class AccountServiceTest {
                 accountService.createAccount(
                         AccountRequest.builder()
                                 .name(name)
-                                .balance(0)
                                 .build()
                 )
         );

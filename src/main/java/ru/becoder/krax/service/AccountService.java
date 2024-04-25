@@ -21,18 +21,20 @@ import java.util.Optional;
 public class AccountService {
     private final AccountRepository accountRepository;
 
-    public void createAccount(AccountRequest accountRequest) {
-        if (accountRequest.getBalance() < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Balance < 0");
+    public Account createAccount(AccountRequest accountRequest) {
+
+        if (accountRepository.findAccountByName(accountRequest.getName()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.OK, "Account already exists");
         }
 
         Account account = Account.builder()
                 .name(accountRequest.getName())
-                .balance(accountRequest.getBalance())
+                .balance(0)
                 .build();
 
         accountRepository.save(account);
         log.info("Acconut {} is saved", Optional.of(account.getId()));
+        return account;
     }
 
     @Transactional
@@ -48,16 +50,9 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public AccountResponse getAccount(long id) {
-        Account account = accountRepository
+    public Account getAccount(long id) {
+        return accountRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
-
-        return AccountResponse
-                .builder()
-                .id(account.getId())
-                .name(account.getName())
-                .balance(account.getBalance())
-                .build();
     }
 }

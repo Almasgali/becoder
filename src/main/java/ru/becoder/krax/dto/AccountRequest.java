@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @Data
 public class AccountRequest {
     String name;
-    long balance;
 }

@@ -7,10 +7,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
 @Table(name = "account")
 @Entity
@@ -24,6 +26,6 @@ public class Account {
     long id;
     @Column(unique = true)
     String name;
-    @Min(0)
+    @Range
     long balance;
 }
