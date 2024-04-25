@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class AccountResponse {
-    private long id;
+    private Long id;
     private String name;
     private long balance;
 }

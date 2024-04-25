@@ -1,10 +1,10 @@
 package ru.becoder.krax.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.dto.AccountRequest;
 import ru.becoder.krax.dto.AccountResponse;
@@ -31,10 +31,10 @@ public class AccountService {
         log.info("Acconut {} is saved", account.getId());
     }
 
-//    @Transactional
-    public void updateAccount(String id, long amount) {
+    @Transactional
+    public void updateAccount(Long id, long amount) {
         Account account = accountRepository
-                .findById(id)
+                .findForUpdateById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
         long newBalance = account.getBalance() + amount;
         if (newBalance < 0) {
@@ -44,7 +44,7 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public AccountResponse getAccount(String id) {
+    public AccountResponse getAccount(Long id) {
         Account account = accountRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
