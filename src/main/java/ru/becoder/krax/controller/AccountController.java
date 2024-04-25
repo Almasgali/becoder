@@ -1,5 +1,6 @@
 package ru.becoder.krax.controller;
 
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.dto.AccountRequest;
 import ru.becoder.krax.dto.AccountResponse;
 import ru.becoder.krax.service.AccountService;
@@ -36,19 +36,13 @@ public class AccountController {
 
     @PutMapping("/{id}/payment/{amount}")
     @ResponseStatus(HttpStatus.OK)
-    public void payment(@PathVariable Long id, @PathVariable long amount) {
-        if (amount < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Amount < 0");
-        }
+    public void payment(@PathVariable Long id, @PathVariable @Min(0) long amount) {
         accountService.updateAccount(id, amount);
     }
 
     @PutMapping("/{id}/withdrawal/{amount}")
     @ResponseStatus(HttpStatus.OK)
-    public void withdrawal(@PathVariable Long id, @PathVariable long amount) {
-        if (amount < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Amount < 0");
-        }
+    public void withdrawal(@PathVariable Long id, @PathVariable @Min(0) long amount) {
         accountService.updateAccount(id, -amount);
     }
 }
