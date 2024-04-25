@@ -11,8 +11,7 @@ import ru.becoder.krax.model.Account;
 import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, String> {
-    @Override
+public interface AccountRepository extends JpaRepository<Account, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<Account> findById(@NonNull String id);
+    Optional<Account> findForUpdateById(@NonNull Long id);
 }

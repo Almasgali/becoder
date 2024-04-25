@@ -11,6 +11,8 @@ import ru.becoder.krax.dto.AccountResponse;
 import ru.becoder.krax.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,13 +30,13 @@ public class AccountService {
                 .build();
 
         accountRepository.save(account);
-        log.info("Acconut {} is saved", account.getId());
+        log.info("Acconut {} is saved", Optional.of(account.getId()));
     }
 
-//    @Transactional
-    public void updateAccount(String id, long amount) {
+    @Transactional
+    public void updateAccount(Long id, long amount) {
         Account account = accountRepository
-                .findById(id)
+                .findForUpdateById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
         long newBalance = account.getBalance() + amount;
         if (newBalance < 0) {
@@ -44,7 +46,7 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public AccountResponse getAccount(String id) {
+    public AccountResponse getAccount(Long id) {
         Account account = accountRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
