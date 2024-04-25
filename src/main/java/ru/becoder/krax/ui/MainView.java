@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 import ru.becoder.krax.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 
-@Route("")
+@Route
 public class MainView extends VerticalLayout {
 
     private final AccountRepository repository;

@@ -7,54 +7,40 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
+import ru.becoder.krax.dto.AccountRequest;
 import ru.becoder.krax.model.Account;
-import ru.becoder.krax.repository.AccountRepository;
-
-/**
- * A simple example to introduce building forms. As your real application is probably much
- * more complicated than this example, you could re-use this form in multiple places. This
- * example component is only used in MainView.
- * <p>
- * In a real world application you'll most likely using a common super class for all your
- * forms - less code, better UX.
- */
+import ru.becoder.krax.service.AccountService;
 
 @SpringComponent
 @UIScope
 public class AccountEditor extends VerticalLayout implements KeyNotifier {
 
-    private final AccountRepository repository;
-
-    /**
-     * The currently edited customer
-     */
+    private final AccountService accountService;
     private Account account;
     TextField name = new TextField("Name");
+    TextField balance = new TextField("Balance");
     Button save = new Button("Save", VaadinIcon.CHECK.create());
-    Button cancel = new Button("Cancel");
+//    Button cancel = new Button("Cancel");
     Button delete = new Button("Delete", VaadinIcon.TRASH.create());
-    HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+    HorizontalLayout actions = new HorizontalLayout(save, delete);
     Binder<Account> binder = new Binder<>(Account.class);
 
     @Setter
     private ChangeHandler changeHandler;
 
-    public AccountEditor(AccountRepository repository) {
-        this.repository = repository;
+    public AccountEditor(AccountService accountService) {
+        this.accountService = accountService;
 
-        add(name, actions);
+        add(name, balance, actions);
+        balance.setVisible(false);
 
-        // bind using naming convention
         binder.bindInstanceFields(this);
 
-        // Configure and style components
         setSpacing(true);
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -62,20 +48,23 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
 
         addKeyPressListener(Key.ENTER, e -> save());
 
-        // wire action buttons to save, delete and reset
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
-        cancel.addClickListener(e -> editAccount(account));
+//        cancel.addClickListener(e -> setVisible(false));
         setVisible(false);
     }
 
     void delete() {
-        repository.delete(account);
+        accountService.deleteAccount(account.getId());
         changeHandler.onChange();
     }
 
     void save() {
-        repository.save(account);
+        if (balance.isVisible()) {
+            accountService.updateAccount(account.getId(), account.getBalance());
+        } else {
+            accountService.createAccount(AccountRequest.builder().name(account.getName()).build());
+        }
         changeHandler.onChange();
     }
 
@@ -90,11 +79,12 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
         }
         final boolean persisted = account.getId() != -1;
         if (persisted) {
-            this.account = repository.findById(account.getId()).get();
+            this.account = accountService.getAccount(account.getId());
         } else {
             this.account = account;
         }
-        cancel.setVisible(persisted);
+//        cancel.setVisible(persisted);
+        balance.setVisible(persisted);
         binder.setBean(this.account);
         setVisible(true);
         name.focus();

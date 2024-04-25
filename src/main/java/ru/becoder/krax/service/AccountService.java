@@ -55,4 +55,8 @@ public class AccountService {
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
     }
+
+    public void deleteAccount(long id) {
+        accountRepository.deleteById(id);
+    }
 }
