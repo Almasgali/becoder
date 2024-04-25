@@ -9,7 +9,7 @@ import ru.becoder.krax.dto.AccountResponse;
 import ru.becoder.krax.service.AccountService;
 
 @RestController
-@RequestMapping("/api/v0/account")
+@RequestMapping("/api/v0/accounts")
 @RequiredArgsConstructor
 public class AccountController {
 

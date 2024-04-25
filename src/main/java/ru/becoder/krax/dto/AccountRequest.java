@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class AccountRequest {
-    String name;
-    long balance;
+    private String name;
+    private long balance;
 }

@@ -3,7 +3,6 @@ package ru.becoder.krax.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,7 +13,6 @@ import ru.becoder.krax.repository.AccountRepository;
 
 @Service
 @RequiredArgsConstructor
-@Async
 @Slf4j
 public class AccountService {
     private final AccountRepository accountRepository;
@@ -33,7 +31,7 @@ public class AccountService {
         log.info("Acconut {} is saved", account.getId());
     }
 
-    @Transactional
+//    @Transactional
     public void updateAccount(String id, long amount) {
         Account account = accountRepository
                 .findById(id)
@@ -42,7 +40,7 @@ public class AccountService {
         if (newBalance < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough money");
         }
-        account.setBalance(account.getBalance() + amount);
+        account.setBalance(newBalance);
         accountRepository.save(account);
     }
 

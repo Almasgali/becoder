@@ -1,18 +1,19 @@
 package ru.becoder.krax.model;
 
 
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(value = "account")
+@Table(name = "accounts")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class Account {
     @Id
-    String id;
-    String name;
-    long balance;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
+    private String name;
+    private long balance;
 }
