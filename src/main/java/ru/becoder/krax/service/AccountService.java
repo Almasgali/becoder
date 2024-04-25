@@ -20,7 +20,7 @@ public class AccountService {
 
     public Account createAccount(String username) {
         if (accountRepository.findAccountByName(username).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists: " + username);
         }
         String token = getToken(username);
         Account account = Account.builder().name(username).token(token).build();

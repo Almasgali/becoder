@@ -27,7 +27,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             if (checkJWTToken(request)) {
                 Claims claims = validateToken(request);
-                if (claims.get("authorities") != null) {
+                if (claims != null && claims.get("authorities") != null) {
                     setUpSpringAuthentication(claims);
                 } else {
                     SecurityContextHolder.clearContext();
@@ -45,6 +45,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private Claims validateToken(HttpServletRequest request) {
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+        if (!JwtUtils.validateJwtToken(jwtToken)) {
+            return null;
+        }
         return Jwts.parserBuilder().setSigningKey(JwtUtils.getSECRET_KEY()).build().parseClaimsJws(jwtToken).getBody();
     }
 

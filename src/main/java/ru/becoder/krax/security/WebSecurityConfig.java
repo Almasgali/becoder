@@ -1,5 +1,6 @@
 package ru.becoder.krax.security;
 
+import jakarta.security.auth.message.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth**").permitAll()
                                 .anyRequest().authenticated())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
+                .exceptionHandling(exceptionConfigurer -> exceptionConfigurer.authenticationEntryPoint(unauthorizedHandler));
         return http.build();
     }
 }
