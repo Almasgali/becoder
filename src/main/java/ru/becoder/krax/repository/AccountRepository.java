@@ -14,4 +14,6 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Account> findForUpdateById(@NonNull Long id);
+
+    Optional<Account> findAccountByName(String name);
 }

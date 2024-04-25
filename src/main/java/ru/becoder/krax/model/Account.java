@@ -15,5 +15,11 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     private String name;
+    private String token;
     private long balance;
+
+    public Account(String name, String password) {
+        this.name = name;
+        this.token = password;
+    }
 }

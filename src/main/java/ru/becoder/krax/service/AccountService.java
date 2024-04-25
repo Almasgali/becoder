@@ -6,10 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.becoder.krax.dto.AccountRequest;
 import ru.becoder.krax.dto.AccountResponse;
 import ru.becoder.krax.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
+
+import static ru.becoder.krax.security.jwt.JwtUtils.getToken;
 
 @Service
 @RequiredArgsConstructor
@@ -17,18 +18,13 @@ import ru.becoder.krax.repository.AccountRepository;
 public class AccountService {
     private final AccountRepository accountRepository;
 
-    public void createAccount(AccountRequest accountRequest) {
-        if (accountRequest.getBalance() < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Balance < 0");
+    public Account createAccount(String username) {
+        if (accountRepository.findAccountByName(username).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
         }
-
-        Account account = Account.builder()
-                .name(accountRequest.getName())
-                .balance(accountRequest.getBalance())
-                .build();
-
-        accountRepository.save(account);
-        log.info("Acconut {} is saved", account.getId());
+        String token = getToken(username);
+        Account account = Account.builder().name(username).token(token).build();
+        return accountRepository.save(account);
     }
 
     @Transactional
@@ -44,16 +40,9 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public AccountResponse getAccount(Long id) {
-        Account account = accountRepository
+    public Account getAccount(Long id) {
+        return accountRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
-
-        return AccountResponse
-                .builder()
-                .id(account.getId())
-                .name(account.getName())
-                .balance(account.getBalance())
-                .build();
     }
 }
