@@ -34,17 +34,29 @@ public class AccountService {
     }
 
     @Transactional
-    public void updateAccount(Long id, long amount) {
-        Account account = accountRepository
-                .findForUpdateById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
-        long newBalance = account.getBalance() + amount;
-        if (newBalance < 0) {
+    public void increaseBalance(long id, long amount) {
+        accountRepository.increaseBalance(id, amount);
+    }
+
+    @Transactional
+    public void decreaseBalance(long id, long amount) {
+        if (accountRepository.decreaseBalance(id, amount) == 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough money");
         }
-        account.setBalance(newBalance);
-        accountRepository.save(account);
     }
+
+//    @Transactional
+//    public void updateAccount(Long id, long amount) {
+//        Account account = accountRepository
+//                .findForUpdateById(id)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+//        long newBalance = account.getBalance() + amount;
+//        if (newBalance < 0) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough money");
+//        }
+//        account.setBalance(newBalance);
+//        accountRepository.save(account);
+//    }
 
     public AccountResponse getAccount(Long id) {
         Account account = accountRepository

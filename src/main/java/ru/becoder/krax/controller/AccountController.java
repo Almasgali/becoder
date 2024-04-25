@@ -1,5 +1,6 @@
 package ru.becoder.krax.controller;
 
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,11 +37,8 @@ public class AccountController {
 
     @PutMapping("/{id}/payment/{amount}")
     @ResponseStatus(HttpStatus.OK)
-    public void payment(@PathVariable Long id, @PathVariable long amount) {
-        if (amount < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Amount < 0");
-        }
-        accountService.updateAccount(id, amount);
+    public void payment(@PathVariable long id, @PathVariable @Min(0) long amount) {
+        accountService.increaseBalance(id, amount);
     }
 
     @PutMapping("/{id}/withdrawal/{amount}")
@@ -49,6 +47,6 @@ public class AccountController {
         if (amount < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Amount < 0");
         }
-        accountService.updateAccount(id, -amount);
+        accountService.decreaseBalance(id, amount);
     }
 }
