@@ -23,7 +23,7 @@ public class AccountService {
     public Account createAccount(AccountRequest accountRequest) {
 
         if (accountRepository.findAccountByName(accountRequest.getName()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.OK, "Account already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exists");
         }
 
         Account account = Account.builder()

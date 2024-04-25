@@ -2,6 +2,8 @@ package ru.becoder.krax.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +21,8 @@ public class Account {
     @GeneratedValue
     long id;
     @Column(unique = true)
+    @Size(min = 4, max = 20)
     String name;
-    @Range
+    @Min(0)
     long balance;
 }
