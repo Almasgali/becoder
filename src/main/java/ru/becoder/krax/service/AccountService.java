@@ -10,6 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.data.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -18,7 +20,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public void updateAccount(Long id, long amount) {
+    public void updateAccount(long id, long amount) {
         Account account = accountRepository
                 .findForUpdateById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
