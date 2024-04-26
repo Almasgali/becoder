@@ -92,6 +92,7 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
             this.account = account;
         }
         balance.setVisible(persisted);
+        name.setVisible(!persisted);
         password.setVisible(!persisted);
         binder.setBean(this.account);
         setVisible(true);
