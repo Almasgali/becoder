@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.vaadin' version '24.3.9'
 }
 
 group = 'ru.becoder'
@@ -12,7 +13,14 @@ java {
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+    maven { url = "https://maven.vaadin.com/vaadin-addons" }
+}
+
+configurations {
+    configureEach {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 }
 
 dependencies {
@@ -40,9 +48,13 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	implementation 'org.liquibase:liquibase-core:4.27.0'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
-//	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-//	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	implementation 'com.vaadin:vaadin-core:24.3.9'
+	implementation 'com.vaadin:vaadin-spring-boot-starter:24.3.9'
+
 	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

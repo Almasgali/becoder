@@ -1,5 +1,9 @@
 package ru.becoder.krax.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,19 +23,43 @@ public class AccountBalanceController extends AccountController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Account getAccount(@PathVariable long id) {
+    @Operation(summary = "Get account by its id.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Found account."),
+            @ApiResponse(responseCode = "404", description = "Account not found.")
+    })
+    public Account getAccount(
+            @PathVariable
+            @Parameter(description = "Id of account.")
+            long id) {
         return accountService.getAccount(id);
     }
 
     @PutMapping("/{id}/payment/{amount}")
     @ResponseStatus(HttpStatus.OK)
-    public void pay(@PathVariable long id, @PathVariable @Min(0) long amount) {
+    @Operation(summary = "Increase balance of specified account.")
+    public void pay(
+            @PathVariable
+            @Parameter(description = "Id of account.")
+            long id,
+            @PathVariable
+            @Min(0)
+            @Parameter(description = "Increase amount.")
+            long amount) {
         accountService.increaseBalance(id, amount);
     }
 
+    @Operation(summary = "Decrease balance of specified account.")
     @PutMapping("/{id}/withdrawal/{amount}")
     @ResponseStatus(HttpStatus.OK)
-    public void withdraw(@PathVariable long id, @PathVariable @Min(0) long amount) {
-        accountService.decreaseBalance(id, -amount);
+    public void withdraw(
+            @PathVariable
+            @Parameter(description = "Id of account.")
+            Long id,
+            @PathVariable
+            @Min(0)
+            @Parameter(description = "Decrease amount.")
+            long amount) {
+        accountService.decreaseBalance(id, amount);
     }
 }

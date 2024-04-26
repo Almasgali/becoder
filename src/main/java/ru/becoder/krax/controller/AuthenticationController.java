@@ -1,5 +1,9 @@
 package ru.becoder.krax.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +24,14 @@ public class AuthenticationController extends AccountController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createAccount(@RequestBody @Valid RegisterRequest request) {
+    @Operation(summary = "Creating new account.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Account created."),
+            @ApiResponse(responseCode = "400", description = "Account already exists.")
+    })
+    public void createAccount(
+            @Parameter(description = "Providing name of new account.")
+            @RequestBody @Valid RegisterRequest request) {
         authenticationService.createAccount(request);
     }
 
