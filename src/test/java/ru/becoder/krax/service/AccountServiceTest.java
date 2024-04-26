@@ -1,25 +1,16 @@
 package ru.becoder.krax.service;
 
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.web.server.ResponseStatusException;
-import ru.becoder.krax.dto.AccountRequest;
-import ru.becoder.krax.utils.IdColumnFilter;
+import ru.becoder.krax.utils.NonSecurityInternalTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,66 +27,12 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureDataJdbc
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestExecutionListeners({
-        DependencyInjectionTestExecutionListener.class,
-        DbUnitTestExecutionListener.class
-})
-@TestPropertySource(
-        locations = "classpath:application.properties")
-@DatabaseTearDown(value = "classpath:database/empty.xml", type = DatabaseOperation.TRUNCATE_TABLE)
-class AccountServiceTest {
 
-    public static final long ACCOUNT_ID = 1;
+class AccountServiceTest extends NonSecurityInternalTest {
+
+    private static final long ACCOUNT_ID = 1;
     @Autowired
     private AccountService accountService;
-
-    @Test
-    @ExpectedDatabase(
-            value = "classpath:database/controller/create/single_account.xml",
-            assertionMode = DatabaseAssertionMode.NON_STRICT,
-            columnFilters = IdColumnFilter.class
-    )
-    void whenCreateNewAccountThanAllIsOk() {
-        accountService.createAccount(
-                AccountRequest.builder()
-                        .name("test")
-                        .build()
-        );
-    }
-
-    @Test
-    @DatabaseSetup(
-            value = "classpath:database/controller/create/single_account.xml"
-    )
-    @ExpectedDatabase(
-            value = "classpath:database/controller/create/single_account.xml",
-            assertionMode = DatabaseAssertionMode.NON_STRICT
-    )
-    void whenCreateExistingAccountThanNothingHappen() {
-        accountService.createAccount(
-                AccountRequest.builder()
-                        .name("test")
-                        .build()
-        );
-    }
-
-    @Test
-    @ExpectedDatabase(
-            value = "classpath:database/controller/create/many_accounts.xml",
-            assertionMode = DatabaseAssertionMode.NON_STRICT
-    )
-    void whenCreateManyAccountsThanAllIsOk() {
-        List.of("one", "two", "three").forEach(name ->
-                accountService.createAccount(
-                        AccountRequest.builder()
-                                .name(name)
-                                .build()
-                )
-        );
-    }
 
     @ParameterizedTest
     @ValueSource(longs = {0, 100, 200, 300})
@@ -286,11 +223,11 @@ class AccountServiceTest {
     }
 
     private void balanceIncrease(long diff) {
-        accountService.updateAccount(ACCOUNT_ID, diff);
+        accountService.increaseBalance(ACCOUNT_ID, diff);
     }
 
     private void balanceDecrease(long diff) {
-        accountService.updateAccount(ACCOUNT_ID, -diff);
+        accountService.decreaseBalance(ACCOUNT_ID, diff);
     }
 
 }
