@@ -26,12 +26,12 @@ public class AccountBalanceController extends AccountController {
     @PutMapping("/{id}/payment/{amount}")
     @ResponseStatus(HttpStatus.OK)
     public void pay(@PathVariable long id, @PathVariable @Min(0) long amount) {
-        accountService.updateAccount(id, amount);
+        accountService.increaseBalance(id, amount);
     }
 
     @PutMapping("/{id}/withdrawal/{amount}")
     @ResponseStatus(HttpStatus.OK)
     public void withdraw(@PathVariable long id, @PathVariable @Min(0) long amount) {
-        accountService.updateAccount(id, -amount);
+        accountService.decreaseBalance(id, -amount);
     }
 }
