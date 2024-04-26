@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  app:
+    image: 'mega_app:0.0.1'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/$DB_NAME
+      - SPRING_DATASOURCE_USERNAME=$DB_USERNAME
+      - SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD
+      - AUTH_TOKEN=$AUTH_TOKEN
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - "$LOCAL_PORT:$DOCKER_PORT"
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: db
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_NAME

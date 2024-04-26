@@ -43,7 +43,11 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        accountRepository.save(account);
+        try {
+            accountRepository.save(account);
+        } catch (Exception ignored) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists: " + request.getUsername());
+        }
     }
 
     public JwtResponse generateAuthToken(@Valid AuthRequest request) {
