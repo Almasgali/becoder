@@ -18,14 +18,14 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findForUpdateById(long id);
 
     @Query(
-            value = "UPDATE accounts SET balance = balance + ?2 WHERE accounts.id = ?1",
+            value = "UPDATE account SET balance = balance + ?2 WHERE id = ?1",
             nativeQuery = true
     )
     @Modifying
     int increaseBalance(long id, @Min(0) long amount);
 
     @Query(
-            value = "UPDATE accounts SET balance = balance - ?2 WHERE accounts.id = ?1 AND balance >= ?2",
+            value = "UPDATE account SET balance = balance - ?2 WHERE id = ?1 AND balance >= ?2",
             nativeQuery = true
     )
     @Modifying
