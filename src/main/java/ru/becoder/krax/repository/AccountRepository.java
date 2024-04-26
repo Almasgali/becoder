@@ -32,4 +32,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     )
     @Modifying
     int decreaseBalance(long id, @Min(0) long amount);
+
+    @Query(
+            value = "UPDATE account SET balance = ?2 WHERE id = ?1",
+            nativeQuery = true
+    )
+    @Modifying
+    int changeBalance(long id, @Min(0) long balance);
 }

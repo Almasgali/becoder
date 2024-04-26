@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="MyApp">
+    <Appenders>
+        <RollingFile
+                name="FILE"
+                fileName="logs/app-${date:yyyy-MM-dd}.log"
+                filePattern="logs/app-%d{yyyy-MM-dd}.log"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="logs" maxDepth="2">
+                    <IfFileName glob="*/app-*.log" />
+                    <IfLastModified age="P30D" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="ERROR">
+            <AppenderRef ref="FILE"/>
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+        <Logger name="STDOUT" level="INFO">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+    </Loggers>
+</Configuration>
