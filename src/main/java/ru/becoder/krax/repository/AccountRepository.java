@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Account> findForUpdateById(long id);
+
+    Optional<Account> findByName(String name);
   
     @Query(
             value = "UPDATE account SET balance = balance + ?2 WHERE id = ?1",

@@ -35,7 +35,7 @@ public class AuthenticationService {
     private final JwtMapper jwtMapper;
 
     public void createAccount(@Valid RegisterRequest request) {
-        if (accountRepository.findAccountByName(request.getUsername()).isPresent()) {
+        if (accountRepository.findByName(request.getUsername()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists: " + request.getUsername());
         }
         Account account = Account.builder()

@@ -10,11 +10,11 @@ import ru.becoder.krax.repository.AccountRepository;
 @Service
 @RequiredArgsConstructor
 public class AccountDetailsService implements UserDetailsService {
-    private final AccountRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public UserDetails loadUserByUsername(String name) {
-        return userRepository.findAccountByName(name)
+        return accountRepository.findByName(name)
                 .orElseThrow(() -> new UsernameNotFoundException(name));
     }
 }
