@@ -140,10 +140,9 @@ public class AuthenticationServiceTest extends SecurityInternalTest {
             }
         }
         assertThat(wasBadException).isFalse();
+        assertThat(exceptions.size()).isEqualTo(requests - 1);
         assertThat(exceptions)
-                .allMatch(e -> e.getStatusCode() == HttpStatus.BAD_REQUEST)
-                .extracting("size")
-                .isEqualTo(requests - 1);
+                .allMatch(e -> e.getStatusCode() == HttpStatus.BAD_REQUEST);
     }
 
     @Test
