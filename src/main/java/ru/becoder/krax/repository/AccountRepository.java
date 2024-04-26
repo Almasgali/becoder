@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.becoder.krax.model.Account;
+import ru.becoder.krax.data.model.Account;
 
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Account> findForUpdateById(long id);
-
+  
     @Query(
             value = "UPDATE account SET balance = balance + ?2 WHERE id = ?1",
             nativeQuery = true
