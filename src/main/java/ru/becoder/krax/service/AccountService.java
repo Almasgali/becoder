@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 import ru.becoder.krax.dto.AccountRequest;
+import ru.becoder.krax.exceptions.AccountAlreadyExistsException;
+import ru.becoder.krax.exceptions.AccountNotFoundException;
+import ru.becoder.krax.exceptions.NotEnoughMoneyException;
 import ru.becoder.krax.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 
@@ -23,7 +26,7 @@ public class AccountService {
     public Account createAccount(AccountRequest accountRequest) {
 
         if (accountRepository.findAccountByName(accountRequest.getName()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exists");
+            throw new AccountAlreadyExistsException();
         }
 
         Account account = Account.builder()
@@ -40,10 +43,10 @@ public class AccountService {
     public void updateAccount(long id, long amount) {
         Account account = accountRepository
                 .findForUpdateById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+                .orElseThrow(AccountNotFoundException::new);
         long newBalance = account.getBalance() + amount;
         if (newBalance < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough money");
+            throw new NotEnoughMoneyException();
         }
         account.setBalance(newBalance);
         accountRepository.save(account);
@@ -52,7 +55,7 @@ public class AccountService {
     public Account getAccount(long id) {
         return accountRepository
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+                .orElseThrow(AccountNotFoundException::new);
     }
 
     public void deleteAccount(long id) {
