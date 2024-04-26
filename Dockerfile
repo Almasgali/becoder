@@ -17,5 +17,4 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes/liquibase /app/liquibase
-RUN export "SPRING_LIQUIBASE_CHANGE-LOG=liquibase/changelog.xml"
 ENTRYPOINT ["java","-cp","app:app/lib/*","ru.becoder.krax.KraxApplication"]
