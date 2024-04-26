@@ -12,18 +12,22 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.Setter;
-import ru.becoder.krax.dto.AccountRequest;
-import ru.becoder.krax.model.Account;
+
+import ru.becoder.krax.data.dto.RegisterRequest;
 import ru.becoder.krax.service.AccountService;
+import ru.becoder.krax.data.model.Account;
+import ru.becoder.krax.service.AuthenticationService;
 
 @SpringComponent
 @UIScope
 public class AccountEditor extends VerticalLayout implements KeyNotifier {
 
     private final AccountService accountService;
+    private final AuthenticationService authenticationService;
     private Account account;
     TextField name = new TextField("Name");
     TextField balance = new TextField("Balance");
+    TextField password = new TextField("Password");
     Button save = new Button("Save", VaadinIcon.CHECK.create());
     Button delete = new Button("Delete", VaadinIcon.TRASH.create());
     HorizontalLayout actions = new HorizontalLayout(save, delete);
@@ -32,10 +36,11 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
     @Setter
     private ChangeHandler changeHandler;
 
-    public AccountEditor(AccountService accountService) {
+    public AccountEditor(AccountService accountService, AuthenticationService authenticationService) {
         this.accountService = accountService;
+        this.authenticationService = authenticationService;
 
-        add(name, balance, actions);
+        add(name, password, balance, actions);
         balance.setVisible(false);
 
         binder.bindInstanceFields(this);
@@ -61,7 +66,12 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
         if (balance.isVisible()) {
             accountService.updateAccount(account.getId(), account.getBalance());
         } else {
-            accountService.createAccount(AccountRequest.builder().name(account.getName()).build());
+            authenticationService.createAccount(
+                    RegisterRequest
+                            .builder()
+                            .username(account.getName())
+                            .password(account.getPassword())
+                            .build());
         }
         changeHandler.onChange();
     }
@@ -82,6 +92,7 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
             this.account = account;
         }
         balance.setVisible(persisted);
+        password.setVisible(!persisted);
         binder.setBean(this.account);
         setVisible(true);
         name.focus();

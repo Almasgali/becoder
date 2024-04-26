@@ -30,9 +30,18 @@ public class AccountService {
         }
     }
 
+    @Transactional
+    public void updateAccount(long id, @Min(0) long balance) {
+        accountRepository.changeBalance(id, balance);
+    }
+
     public Account getAccount(long id) {
         return accountRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+    }
+
+    public void deleteAccount(long id) {
+        accountRepository.deleteById(id);
     }
 }

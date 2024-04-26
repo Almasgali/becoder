@@ -6,10 +6,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import ru.becoder.krax.model.Account;
+import jakarta.annotation.security.RolesAllowed;
+import ru.becoder.krax.data.model.Account;
 import ru.becoder.krax.repository.AccountRepository;
 
 @Route
+@RolesAllowed("ADMIN")
 public class MainView extends VerticalLayout {
 
     private final AccountRepository repository;
@@ -39,7 +41,12 @@ public class MainView extends VerticalLayout {
             this.editor.editAccount(e.getValue());
         });
 
-        this.addNewBtn.addClickListener(e -> this.editor.editAccount(Account.builder().id(-1).name("").build()));
+        this.addNewBtn.addClickListener(e -> this.editor.editAccount(Account
+                .builder()
+                .id(-1L)
+                .name("")
+                .password("")
+                .build()));
 
         editor.setChangeHandler(() -> {
             this.editor.setVisible(false);
