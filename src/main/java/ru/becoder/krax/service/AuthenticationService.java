@@ -1,5 +1,6 @@
 package ru.becoder.krax.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class AuthenticationService {
     private final JwtUtils jwtUtils;
     private final JwtMapper jwtMapper;
 
-    public void createAccount(RegisterRequest request) {
+    public void createAccount(@Valid RegisterRequest request) {
         if (accountRepository.findAccountByName(request.getUsername()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists: " + request.getUsername());
         }
@@ -45,7 +46,7 @@ public class AuthenticationService {
         accountRepository.save(account);
     }
 
-    public JwtResponse generateAuthToken(AuthRequest request) {
+    public JwtResponse generateAuthToken(@Valid AuthRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
