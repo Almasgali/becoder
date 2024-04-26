@@ -5,6 +5,7 @@ import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -64,6 +65,10 @@ public class AccountEditor extends VerticalLayout implements KeyNotifier {
 
     void save() {
         if (balance.isVisible()) {
+            if (account.getBalance() < 0) {
+                Notification.show("Balance should be non-neagtive");
+                return;
+            }
             accountService.updateAccount(account.getId(), account.getBalance());
         } else {
             authenticationService.createAccount(
