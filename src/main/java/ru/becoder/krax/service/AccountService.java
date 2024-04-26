@@ -1,6 +1,7 @@
 package ru.becoder.krax.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,15 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public void updateAccount(long id, long amount) {
-        Account account = accountRepository
-                .findForUpdateById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
-        long newBalance = account.getBalance() + amount;
-        if (newBalance < 0) {
+    public void increaseBalance(long id, @Min(0) long amount) {
+        accountRepository.increaseBalance(id, amount);
+    }
+
+    @Transactional
+    public void decreaseBalance(long id, @Min(0) long amount) {
+        if (accountRepository.decreaseBalance(id, amount) == 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough money");
         }
-        account.setBalance(newBalance);
-        accountRepository.save(account);
     }
 
     public Account getAccount(long id) {

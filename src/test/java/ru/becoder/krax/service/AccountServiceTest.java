@@ -223,11 +223,11 @@ class AccountServiceTest extends NonSecurityInternalTest {
     }
 
     private void balanceIncrease(long diff) {
-        accountService.updateAccount(ACCOUNT_ID, diff);
+        accountService.increaseBalance(ACCOUNT_ID, diff);
     }
 
     private void balanceDecrease(long diff) {
-        accountService.updateAccount(ACCOUNT_ID, -diff);
+        accountService.decreaseBalance(ACCOUNT_ID, diff);
     }
 
 }
